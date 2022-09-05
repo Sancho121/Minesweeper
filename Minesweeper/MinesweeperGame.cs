@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Minesweeper
 {
@@ -11,6 +12,8 @@ namespace Minesweeper
         private readonly int gameFieldWidthInCells;
         private readonly int cellSize;
 
+        public int CountBombs { get; private set; } = 10;
+
         public MinesweeperGame(int gameFieldHeightInCells, int gameFieldWidthInCells, int cellSize)
         {
             this.gameFieldHeightInCells = gameFieldHeightInCells;
@@ -19,7 +22,7 @@ namespace Minesweeper
         }
 
         public void Draw(Graphics graphics)
-        {
+        {           
             for (int y = 0; y <= gameFieldHeightInCells; y++)
             {
                 graphics.DrawLine(Pens.Black, 0, y * cellSize, gameFieldWidthInCells * cellSize, y * cellSize);
