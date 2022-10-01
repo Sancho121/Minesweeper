@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Text;
 using System.Windows.Forms;
 
@@ -8,29 +9,56 @@ namespace Minesweeper
 {
     class MinesweeperGame
     {
-        private readonly int gameFieldHeightInCells;
-        private readonly int gameFieldWidthInCells;
+        private readonly int gameFieldInCells;
         private readonly int cellSize;
+        private Cell[,] cells;
 
         public int CountBombs { get; private set; } = 10;
+        private int[,] gameField;
 
-        public MinesweeperGame(int gameFieldHeightInCells, int gameFieldWidthInCells, int cellSize)
+        public MinesweeperGame(int gameFieldInCells, int cellSize)
         {
-            this.gameFieldHeightInCells = gameFieldHeightInCells;
-            this.gameFieldWidthInCells = gameFieldWidthInCells;
+            this.gameFieldInCells = gameFieldInCells;
             this.cellSize = cellSize;
+            //gameField = new int[gameFieldInCells, gameFieldInCells];
+            cells = new Cell[gameFieldInCells, gameFieldInCells];
         }
 
         public void Draw(Graphics graphics)
-        {           
-            for (int y = 0; y <= gameFieldHeightInCells; y++)
+        {
+            foreach (var point in GetCellPoints())
             {
-                graphics.DrawLine(Pens.Black, 0, y * cellSize, gameFieldWidthInCells * cellSize, y * cellSize);
+                cells[point.y, point.x].DrawCells(graphics, point.x, point.y, cellSize);
             }
 
-            for (int x = 0; x <= gameFieldWidthInCells; x++)
+            for (int i = 0; i <= gameFieldInCells; i++)
             {
-                graphics.DrawLine(Pens.Black, x * cellSize, 0, x * cellSize, gameFieldHeightInCells * cellSize);
+                graphics.DrawLine(Pens.Black, 0, i * cellSize, gameFieldInCells * cellSize, i * cellSize);
+                graphics.DrawLine(Pens.Black, i * cellSize, 0, i * cellSize, gameFieldInCells * cellSize);
+            }          
+        }
+
+        public List<(int y, int x)> GetCellPoints()
+        {
+            List<(int y, int x)> cellPoints = new List<(int y, int x)>();
+
+            for (int y = 0; y < gameFieldInCells; y++)
+            {
+                for (int x = 0; x < gameFieldInCells; x++)
+                {
+                    cellPoints.Add((y, x));
+                }
+            }
+            return cellPoints;
+        }
+
+        public void Restart()
+        {
+            //cells = new Cell[gameFieldInCells, gameFieldInCells];
+            foreach (var point in GetCellPoints())
+            {
+                cells[point.y, point.x] = new Cell();
+                cells[point.y, point.x].cellState = CellState.ClosedCell;
             }
         }
     }

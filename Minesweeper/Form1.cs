@@ -13,19 +13,20 @@ namespace Minesweeper
     public partial class Form1 : Form
     {
         TimeSpan time = TimeSpan.Zero;
-        MinesweeperGame minesweeperGame = new MinesweeperGame(9, 9, 30);
+        MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
       
         public Form1()
         {
             InitializeComponent();
             label1CountBombs.Text = $"Мин: {minesweeperGame.CountBombs}";
             label2Timer.Text = time.ToString();
-            timer1.Start();           
+            timer1.Start();
+            minesweeperGame.Restart();
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            minesweeperGame.Draw(e.Graphics);
+            minesweeperGame.Draw(e.Graphics);          
         }
 
         private void timer1_Tick(object sender, EventArgs e)
