@@ -13,9 +13,10 @@ namespace Minesweeper
     public partial class Form1 : Form
     {
         TimeSpan time = TimeSpan.Zero;
-        MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);        
-        Point pointVisualCell = new Point(-1000, -1000);
-      
+        MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
+        Point pointVisualCell = new Point();
+        Rectangle visualCell;
+
         public Form1()
         {
             InitializeComponent();
@@ -28,7 +29,10 @@ namespace Minesweeper
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             minesweeperGame.Draw(e.Graphics);
-            e.Graphics.FillRectangle(Brushes.DarkGreen, pointVisualCell.X * minesweeperGame.cellSize, pointVisualCell.Y * minesweeperGame.cellSize, minesweeperGame.cellSize, minesweeperGame.cellSize);
+            if (minesweeperGame.cells[pointVisualCell.Y, pointVisualCell.X].cellState == CellState.ClosedCell)
+            {
+                e.Graphics.FillRectangle(Brushes.DarkGreen, visualCell);
+            }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -41,7 +45,19 @@ namespace Minesweeper
         {
             pointVisualCell.X = e.Location.X / minesweeperGame.cellSize;
             pointVisualCell.Y = e.Location.Y / minesweeperGame.cellSize;
-            pictureBox1.Refresh();           
+
+            visualCell = new Rectangle(
+                pointVisualCell.X * minesweeperGame.cellSize,
+                pointVisualCell.Y * minesweeperGame.cellSize,
+                minesweeperGame.cellSize,
+                minesweeperGame.cellSize
+                );
+            pictureBox1.Refresh();
+        }
+
+        private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
+        {
+            minesweeperGame.ActionWithClosedCell(e.Button, pointVisualCell.X, pointVisualCell.Y);
         }
     }
 }

@@ -47,6 +47,7 @@ namespace Minesweeper
             this.pictureBox1.TabStop = false;
             this.pictureBox1.Paint += new System.Windows.Forms.PaintEventHandler(this.pictureBox1_Paint);
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
+            this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
             // button1
             // 
@@ -84,7 +85,7 @@ namespace Minesweeper
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(661, 450);
+            this.ClientSize = new System.Drawing.Size(594, 450);
             this.Controls.Add(this.label2Timer);
             this.Controls.Add(this.label1CountBombs);
             this.Controls.Add(this.button1);

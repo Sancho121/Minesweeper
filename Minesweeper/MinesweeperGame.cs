@@ -11,15 +11,15 @@ namespace Minesweeper
     {
         private readonly int gameFieldInCells;
         public readonly int cellSize;
-        private Cell[,] cells;
+        public Cell[,] cells;
 
         public int CountBombs { get; private set; } = 10;
 
         public MinesweeperGame(int gameFieldInCells, int cellSize)
         {
             this.gameFieldInCells = gameFieldInCells;
-            this.cellSize = cellSize;            
-            cells = new Cell[gameFieldInCells, gameFieldInCells];
+            this.cellSize = cellSize;
+            cells = new Cell[gameFieldInCells + 1, gameFieldInCells + 1];
         }
 
         public void Draw(Graphics graphics)
@@ -33,7 +33,7 @@ namespace Minesweeper
             {
                 graphics.DrawLine(Pens.Black, 0, i * cellSize, gameFieldInCells * cellSize, i * cellSize);
                 graphics.DrawLine(Pens.Black, i * cellSize, 0, i * cellSize, gameFieldInCells * cellSize);
-            }          
+            }
         }
 
         public List<(int y, int x)> GetCellPoints()
@@ -56,6 +56,16 @@ namespace Minesweeper
             {
                 cells[point.y, point.x] = new Cell();
                 cells[point.y, point.x].cellState = CellState.ClosedCell;
+            }
+        }
+
+        public void ActionWithClosedCell(MouseButtons mouseButtons, int x, int y)
+        {
+            switch (mouseButtons)
+            {
+                case MouseButtons.Left:
+                    cells[y, x].cellState = CellState.OpenCell;
+                    break;
             }
         }
     }
