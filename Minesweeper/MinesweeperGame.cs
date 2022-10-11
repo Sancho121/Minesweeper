@@ -19,7 +19,7 @@ namespace Minesweeper
         {
             this.gameFieldInCells = gameFieldInCells;
             this.cellSize = cellSize;
-            cells = new Cell[gameFieldInCells + 1, gameFieldInCells + 1];
+            cells = new Cell[gameFieldInCells, gameFieldInCells];
         }
 
         public void Draw(Graphics graphics)
