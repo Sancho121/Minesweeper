@@ -10,17 +10,15 @@ namespace Minesweeper
     class MinesweeperGame
     {
         private readonly int gameFieldInCells;
-        private readonly int cellSize;
+        public readonly int cellSize;
         private Cell[,] cells;
 
         public int CountBombs { get; private set; } = 10;
-        private int[,] gameField;
 
         public MinesweeperGame(int gameFieldInCells, int cellSize)
         {
             this.gameFieldInCells = gameFieldInCells;
-            this.cellSize = cellSize;
-            //gameField = new int[gameFieldInCells, gameFieldInCells];
+            this.cellSize = cellSize;            
             cells = new Cell[gameFieldInCells, gameFieldInCells];
         }
 
@@ -54,7 +52,6 @@ namespace Minesweeper
 
         public void Restart()
         {
-            //cells = new Cell[gameFieldInCells, gameFieldInCells];
             foreach (var point in GetCellPoints())
             {
                 cells[point.y, point.x] = new Cell();

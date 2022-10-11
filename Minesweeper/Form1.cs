@@ -12,8 +12,10 @@ namespace Minesweeper
 {
     public partial class Form1 : Form
     {
+        private Rectangle mHoverRectangle = Rectangle.Empty;
         TimeSpan time = TimeSpan.Zero;
-        MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
+        MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);        
+        Point pointVisualCell = new Point(-1000, -1000);
       
         public Form1()
         {
@@ -26,13 +28,21 @@ namespace Minesweeper
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
-            minesweeperGame.Draw(e.Graphics);          
+            minesweeperGame.Draw(e.Graphics);
+            e.Graphics.FillRectangle(Brushes.DarkGreen, pointVisualCell.X * minesweeperGame.cellSize, pointVisualCell.Y * minesweeperGame.cellSize, minesweeperGame.cellSize, minesweeperGame.cellSize);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
             time += TimeSpan.FromSeconds(1);
             label2Timer.Text = time.ToString();
+        }
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            pointVisualCell.X = e.Location.X / minesweeperGame.cellSize;
+            pointVisualCell.Y = e.Location.Y / minesweeperGame.cellSize;
+            pictureBox1.Refresh();           
         }
     }
 }
