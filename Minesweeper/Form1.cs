@@ -12,7 +12,6 @@ namespace Minesweeper
 {
     public partial class Form1 : Form
     {
-        private Rectangle mHoverRectangle = Rectangle.Empty;
         TimeSpan time = TimeSpan.Zero;
         MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);        
         Point pointVisualCell = new Point(-1000, -1000);
