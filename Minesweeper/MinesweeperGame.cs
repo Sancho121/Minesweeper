@@ -76,7 +76,7 @@ namespace Minesweeper
             {
                 cells[y, x].cellState = CellState.FlagCell;
             }
-            if (cells[y, x].cellState == CellState.FlagCell)
+            else if (cells[y, x].cellState == CellState.FlagCell)
             {
                 cells[y, x].cellState = CellState.ClosedCell;
             }
