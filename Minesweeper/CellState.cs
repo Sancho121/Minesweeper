@@ -7,6 +7,7 @@ namespace Minesweeper
     public enum CellState
     {
         ClosedCell,
-        OpenCell
+        OpenCell,
+        FlagCell
     }
 }

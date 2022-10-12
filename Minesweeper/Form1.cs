@@ -21,8 +21,7 @@ namespace Minesweeper
         {
             InitializeComponent();
             label1CountBombs.Text = $"Мин: {minesweeperGame.CountBombs}";
-            label2Timer.Text = time.ToString();
-            timer1.Start();
+            label2Timer.Text = time.ToString();           
             minesweeperGame.Restart();
         }
 
@@ -57,7 +56,16 @@ namespace Minesweeper
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            minesweeperGame.ActionWithClosedCell(e.Button, pointVisualCell.X, pointVisualCell.Y);
+            timer1.Start();
+            if (e.Button == MouseButtons.Left)
+            {
+                minesweeperGame.OpenCell(pointVisualCell.X, pointVisualCell.Y);
+            }
+
+            if (e.Button == MouseButtons.Right)
+            {
+                minesweeperGame.PutFlagInCell(pointVisualCell.X, pointVisualCell.Y);
+            }          
         }
     }
 }

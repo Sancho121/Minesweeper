@@ -36,7 +36,7 @@ namespace Minesweeper
             }
         }
 
-        public List<(int y, int x)> GetCellPoints()
+        private List<(int y, int x)> GetCellPoints()
         {
             List<(int y, int x)> cellPoints = new List<(int y, int x)>();
 
@@ -59,13 +59,26 @@ namespace Minesweeper
             }
         }
 
-        public void ActionWithClosedCell(MouseButtons mouseButtons, int x, int y)
+        public void OpenCell(int x, int y)
         {
-            switch (mouseButtons)
+            if (cells[y, x].cellState == CellState.ClosedCell)
             {
-                case MouseButtons.Left:
-                    cells[y, x].cellState = CellState.OpenCell;
-                    break;
+                cells[y, x].cellState = CellState.OpenCell;
+            }
+
+            if (cells[y, x].cellState == CellState.FlagCell)
+                return;
+        }
+
+        public void PutFlagInCell(int x, int y)
+        {
+            if (cells[y, x].cellState == CellState.ClosedCell)
+            {
+                cells[y, x].cellState = CellState.FlagCell;
+            }
+            if (cells[y, x].cellState == CellState.FlagCell)
+            {
+                cells[y, x].cellState = CellState.ClosedCell;
             }
         }
     }
