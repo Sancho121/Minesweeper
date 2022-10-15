@@ -57,6 +57,7 @@ namespace Minesweeper
             this.button1.TabIndex = 1;
             this.button1.Text = "Рестарт";
             this.button1.UseVisualStyleBackColor = true;
+            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // label1CountBombs
             // 
@@ -102,9 +103,9 @@ namespace Minesweeper
 
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Label label1CountBombs;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label label2Timer;
+        private System.Windows.Forms.Label label1CountBombs;
     }
 }
 

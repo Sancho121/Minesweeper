@@ -52,6 +52,7 @@ namespace Minesweeper
 
         public void Restart()
         {
+            CountBombs = 10;
             foreach (var point in GetCellPoints())
             {
                 cells[point.y, point.x] = new Cell();
@@ -74,10 +75,13 @@ namespace Minesweeper
         {
             if (cells[y, x].cellState == CellState.ClosedCell)
             {
+                CountBombs--;
                 cells[y, x].cellState = CellState.FlagCell;
+
             }
             else if (cells[y, x].cellState == CellState.FlagCell)
             {
+                CountBombs++;
                 cells[y, x].cellState = CellState.ClosedCell;
             }
         }
