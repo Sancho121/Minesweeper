@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Text;
+using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 
@@ -12,6 +13,7 @@ namespace Minesweeper
         private readonly int gameFieldInCells;
         public readonly int cellSize;
         public Cell[,] cells;
+        private Random random = new Random();
 
         public int CountBombs { get; private set; } = 10;
 
@@ -83,6 +85,16 @@ namespace Minesweeper
             {
                 CountBombs++;
                 cells[y, x].cellState = CellState.ClosedCell;
+            }
+        }
+
+        public void GenerateBombs()
+        {
+            foreach (var point in GetCellPoints()
+                .OrderBy(x => random.NextDouble())
+                .Take(CountBombs))
+            {
+                cells[point.y, point.x].isPresenceBombInCell = true;
             }
         }
     }

@@ -10,6 +10,8 @@ namespace Minesweeper
         public CellState cellState;
 
         private Image imageFlag = Properties.Resources.flag;
+        private Bitmap imageBomb = Properties.Resources.bomb;
+        public bool isPresenceBombInCell;
 
         public void DrawCells(Graphics graphics, int x, int y, int cellSize)
         {
@@ -20,6 +22,10 @@ namespace Minesweeper
             if (cellState == CellState.FlagCell)
             {
                 graphics.DrawImage(imageFlag, x * cellSize, y * cellSize);
+            }
+            if (cellState == CellState.OpenCell && isPresenceBombInCell == true)
+            {
+                graphics.DrawImage(imageBomb, x * cellSize, y * cellSize);
             }
         }
     }
