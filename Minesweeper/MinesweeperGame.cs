@@ -14,14 +14,17 @@ namespace Minesweeper
         public readonly int cellSize;
         public Cell[,] cells;
         private Random random = new Random();
+        public List<(int y, int x)> locationBombs = new List<(int y, int x)>();
+        Form1 mainForm;
 
         public int CountBombs { get; private set; } = 10;
 
-        public MinesweeperGame(int gameFieldInCells, int cellSize)
+        public MinesweeperGame(int gameFieldInCells, int cellSize, Form1 form)
         {
             this.gameFieldInCells = gameFieldInCells;
             this.cellSize = cellSize;
             cells = new Cell[gameFieldInCells, gameFieldInCells];
+            mainForm = form;
         }
 
         public void Draw(Graphics graphics)
@@ -71,6 +74,20 @@ namespace Minesweeper
 
             if (cells[y, x].cellState == CellState.FlagCell)
                 return;
+
+            if (cells[y, x].cellState == CellState.OpenCell && cells[y, x].isPresenceBombInCell == true)
+            {
+                GameOver();
+            }
+        }
+
+        private void GameOver()
+        {           
+            foreach (var t in locationBombs)
+            {
+                cells[t.y, t.x].cellState = CellState.OpenCell;
+            }
+            mainForm.Lose();
         }
 
         public void PutFlagInCell(int x, int y)
@@ -90,9 +107,12 @@ namespace Minesweeper
 
         public void GenerateBombs()
         {
-            foreach (var point in GetCellPoints()
+            locationBombs = GetCellPoints()
                 .OrderBy(x => random.NextDouble())
-                .Take(CountBombs))
+                .Take(CountBombs)
+                .ToList();
+
+            foreach (var point in locationBombs)
             {
                 cells[point.y, point.x].isPresenceBombInCell = true;
             }

@@ -10,20 +10,22 @@ using System.Windows.Forms;
 
 namespace Minesweeper
 {
-    public partial class Form1 : Form
+    partial class Form1 : Form
     {
         TimeSpan time = TimeSpan.Zero;
-        MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
+        //MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
+        MinesweeperGame minesweeperGame;
         Point pointVisualCell = new Point();
         Rectangle visualCell;
 
         public Form1()
         {
             InitializeComponent();
+            minesweeperGame = new MinesweeperGame(9, 30, this);
             minesweeperGame.Restart();
             minesweeperGame.GenerateBombs();
             label1CountBombs.Text = $"Мин: {minesweeperGame.CountBombs}";
-            label2Timer.Text = time.ToString();           
+            label2Timer.Text = time.ToString();
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -83,9 +85,18 @@ namespace Minesweeper
             minesweeperGame.Restart();
             minesweeperGame.GenerateBombs();
             timer1.Stop();
-            label2Timer.Text = TimeSpan.Zero.ToString();
+            time = TimeSpan.Zero;
+            label2Timer.Text = time.ToString();
             label1CountBombs.Text = $"Мин: {minesweeperGame.CountBombs}";
             this.pictureBox1.Refresh();
+        }
+
+        public void Lose()
+        {
+            timer1.Stop();
+            this.pictureBox1.Refresh();
+            MessageBox.Show("луз");
+            button1_Click(this, new EventArgs());
         }
     }
 }
