@@ -69,9 +69,9 @@ namespace Minesweeper
             {
                 minesweeperGame.PutFlagInCell(pointVisualCell.X, pointVisualCell.Y);
 
-                if (minesweeperGame.CountBombs >= 0)
+                if (minesweeperGame.CountFlags <= 10)
                 {
-                    label1CountBombs.Text = $"Мин: {minesweeperGame.CountBombs}";
+                    label1CountBombs.Text = $"Мин: {minesweeperGame.CountBombs - minesweeperGame.CountFlags}";
                 }
                 else
                 {
@@ -96,6 +96,14 @@ namespace Minesweeper
             timer1.Stop();
             this.pictureBox1.Refresh();
             MessageBox.Show("луз");
+            button1_Click(this, new EventArgs());
+        }
+
+        public void Win()
+        {
+            timer1.Stop();
+            this.pictureBox1.Refresh();
+            MessageBox.Show("вин");
             button1_Click(this, new EventArgs());
         }
     }

@@ -16,8 +16,10 @@ namespace Minesweeper
         private Random random = new Random();
         public List<(int y, int x)> locationBombs = new List<(int y, int x)>();
         Form1 mainForm;
+        private int countClosedCells;
 
         public int CountBombs { get; private set; } = 10;
+        public int CountFlags { get; private set; } = 0;
 
         public MinesweeperGame(int gameFieldInCells, int cellSize, Form1 form)
         {
@@ -25,6 +27,7 @@ namespace Minesweeper
             this.cellSize = cellSize;
             cells = new Cell[gameFieldInCells, gameFieldInCells];
             mainForm = form;
+            countClosedCells = gameFieldInCells * gameFieldInCells;
         }
 
         public void Draw(Graphics graphics)
@@ -58,6 +61,8 @@ namespace Minesweeper
         public void Restart()
         {
             CountBombs = 10;
+            CountFlags = 0;
+            countClosedCells = gameFieldInCells * gameFieldInCells;
             foreach (var point in GetCellPoints())
             {
                 cells[point.y, point.x] = new Cell();
@@ -70,51 +75,68 @@ namespace Minesweeper
             if (cells[y, x].cellState == CellState.ClosedCell)
             {
                 cells[y, x].cellState = CellState.OpenCell;
+                countClosedCells--;
             }
 
             if (cells[y, x].cellState == CellState.FlagCell)
                 return;
-
+            
             if (cells[y, x].cellState == CellState.OpenCell && cells[y, x].isPresenceBombInCell == true)
             {
-                GameOver();
+                GameLose();
+            }
+
+            if (countClosedCells == CountBombs)
+            {
+                GameWin();
             }
         }
 
-        private void GameOver()
-        {           
-            foreach (var t in locationBombs)
+        private void GameLose()
+        {
+            foreach (var location in locationBombs)
             {
-                cells[t.y, t.x].cellState = CellState.OpenCell;
+                cells[location.y, location.x].cellState = CellState.OpenCell;
             }
             mainForm.Lose();
+        }
+
+        private void GameWin()
+        {
+            foreach (var location in locationBombs)
+            {
+                cells[location.y, location.x].cellState = CellState.FlagCell;
+            }
+            mainForm.Win();
         }
 
         public void PutFlagInCell(int x, int y)
         {
             if (cells[y, x].cellState == CellState.ClosedCell)
             {
-                CountBombs--;
+                CountFlags++;
                 cells[y, x].cellState = CellState.FlagCell;
 
             }
             else if (cells[y, x].cellState == CellState.FlagCell)
             {
-                CountBombs++;
+                CountFlags--;
                 cells[y, x].cellState = CellState.ClosedCell;
-            }
+            }          
         }
 
         public void GenerateBombs()
         {
-            locationBombs = GetCellPoints()
-                .OrderBy(x => random.NextDouble())
-                .Take(CountBombs)
-                .ToList();
+            //locationBombs = GetCellPoints()
+            //    .OrderBy(x => random.NextDouble())
+            //    .Take(CountBombs)
+            //    .ToList();
 
-            foreach (var point in locationBombs)
+            locationBombs = new List<(int y, int x)> { (0, 0), (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7), (8, 8), (0, 1) };
+
+            foreach (var location in locationBombs)
             {
-                cells[point.y, point.x].isPresenceBombInCell = true;
+                cells[location.y, location.x].isPresenceBombInCell = true;
             }
         }
     }
