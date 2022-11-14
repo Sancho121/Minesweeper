@@ -16,7 +16,7 @@ namespace Minesweeper
         private Random random = new Random();
         public List<(int y, int x)> locationBombs = new List<(int y, int x)>();
         Form1 mainForm;
-        private int countClosedCells;
+        private int ammountClosedCells;
 
         public int CountBombs { get; private set; } = 10;
         public int CountFlags { get; private set; } = 0;
@@ -27,7 +27,7 @@ namespace Minesweeper
             this.cellSize = cellSize;
             cells = new Cell[gameFieldInCells, gameFieldInCells];
             mainForm = form;
-            countClosedCells = gameFieldInCells * gameFieldInCells;
+            ammountClosedCells = gameFieldInCells * gameFieldInCells;
         }
 
         public void Draw(Graphics graphics)
@@ -62,7 +62,7 @@ namespace Minesweeper
         {
             CountBombs = 10;
             CountFlags = 0;
-            countClosedCells = gameFieldInCells * gameFieldInCells;
+            ammountClosedCells = gameFieldInCells * gameFieldInCells;
             foreach (var point in GetCellPoints())
             {
                 cells[point.y, point.x] = new Cell();
@@ -74,8 +74,9 @@ namespace Minesweeper
         {
             if (cells[y, x].cellState == CellState.ClosedCell)
             {
+                CountBombsAroundCell(x, y);
                 cells[y, x].cellState = CellState.OpenCell;
-                countClosedCells--;
+                ammountClosedCells--;
             }
 
             if (cells[y, x].cellState == CellState.FlagCell)
@@ -86,7 +87,7 @@ namespace Minesweeper
                 GameLose();
             }
 
-            if (countClosedCells == CountBombs)
+            if (ammountClosedCells == CountBombs)
             {
                 GameWin();
             }
@@ -108,6 +109,23 @@ namespace Minesweeper
                 cells[location.y, location.x].cellState = CellState.FlagCell;
             }
             mainForm.Win();
+        }
+        
+        private void CountBombsAroundCell(int x, int y)
+        {
+            for (int column = y - 1; column < y + 2; column++)
+            {
+                for (int line = x - 1; line < x + 2; line++)
+                {
+                    if (line < 0 || column < 0 || column == gameFieldInCells || line == gameFieldInCells)
+                        continue;
+
+                    if (cells[column, line].isPresenceBombInCell == true)
+                    {
+                        cells[y, x].bombsAroundCell++;
+                    }
+                }
+            }
         }
 
         public void PutFlagInCell(int x, int y)

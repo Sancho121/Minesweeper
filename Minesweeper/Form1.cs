@@ -59,7 +59,7 @@ namespace Minesweeper
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            timer1.Start();            
+            timer1.Start();
             if (e.Button == MouseButtons.Left)
             {
                 minesweeperGame.OpenCell(pointVisualCell.X, pointVisualCell.Y);
