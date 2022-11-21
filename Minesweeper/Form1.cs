@@ -23,7 +23,6 @@ namespace Minesweeper
             InitializeComponent();
             minesweeperGame = new MinesweeperGame(9, 30, this);
             minesweeperGame.Restart();
-            minesweeperGame.GenerateBombs();
             label1CountBombs.Text = $"Мин: {minesweeperGame.CountBombs}";
             label2Timer.Text = time.ToString();
         }
@@ -62,12 +61,12 @@ namespace Minesweeper
             timer1.Start();
             if (e.Button == MouseButtons.Left)
             {
-                minesweeperGame.OpenCell(pointVisualCell.X, pointVisualCell.Y);
+                minesweeperGame.OpenCell(pointVisualCell.Y, pointVisualCell.X);
             }
 
             if (e.Button == MouseButtons.Right)
             {
-                minesweeperGame.PutFlagInCell(pointVisualCell.X, pointVisualCell.Y);
+                minesweeperGame.PutFlagInCell(pointVisualCell.Y, pointVisualCell.X);
 
                 if (minesweeperGame.CountFlags <= 10)
                 {
@@ -81,9 +80,8 @@ namespace Minesweeper
         }
 
         private void button1_Click(object sender, EventArgs e)
-        {
+        {          
             minesweeperGame.Restart();
-            minesweeperGame.GenerateBombs();
             timer1.Stop();
             time = TimeSpan.Zero;
             label2Timer.Text = time.ToString();

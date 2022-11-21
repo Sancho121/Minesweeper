@@ -12,9 +12,10 @@ namespace Minesweeper
 
         private Image imageFlag = Properties.Resources.flag;
         private Bitmap imageBomb = Properties.Resources.bomb;
-        Font font = new Font(FontFamily.GenericSansSerif, 18);
+        private Font font = new Font(FontFamily.GenericSansSerif, 18);
         public bool isPresenceBombInCell;
         public int bombsAroundCell;
+        public bool isVisitCell;
 
         private Dictionary<int, Brush> brush = new Dictionary<int, Brush>()
         {
