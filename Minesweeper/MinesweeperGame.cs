@@ -140,7 +140,7 @@ namespace Minesweeper
             {
                 for (int line = x - 1; line < x + 2; line++)
                 {
-                    if (line < 0 || column < 0 || column == gameFieldInCells || line == gameFieldInCells || (column == y && line == x))
+                    if (CoordinatesOutsideGameField(column, line) || (column == y && line == x) || cells[column, line].cellState == CellState.FlagCell)
                         continue;
 
                     if (cells[column, line].cellState == CellState.OpenCell)
@@ -166,7 +166,7 @@ namespace Minesweeper
             {
                 for (int line = x - 1; line < x + 2; line++)
                 {
-                    if (line < 0 || column < 0 || column == gameFieldInCells || line == gameFieldInCells || (column == y && line == x))
+                    if (CoordinatesOutsideGameField(column, line) || (column == y && line == x))
                         continue;
 
                     if (cells[column, line].isPresenceBombInCell == true)
@@ -175,6 +175,11 @@ namespace Minesweeper
                     }
                 }
             }
+        }
+
+        public bool CoordinatesOutsideGameField(int column, int line)
+        {
+            return line < 0 || column < 0 || column == gameFieldInCells || line == gameFieldInCells;
         }
 
         public void PutFlagInCell(int y, int x)
