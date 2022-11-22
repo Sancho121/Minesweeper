@@ -58,15 +58,18 @@ namespace Minesweeper
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
+            int cellX = e.Location.X / minesweeperGame.cellSize;
+            int cellY = e.Location.Y / minesweeperGame.cellSize;
+
             timer1.Start();
             if (e.Button == MouseButtons.Left)
             {
-                minesweeperGame.OpenCell(pointVisualCell.Y, pointVisualCell.X);
+                minesweeperGame.OpenCell(cellY, cellX);
             }
 
             if (e.Button == MouseButtons.Right)
             {
-                minesweeperGame.PutFlagInCell(pointVisualCell.Y, pointVisualCell.X);
+                minesweeperGame.PutFlagInCell(cellY, cellX);
 
                 if (minesweeperGame.CountFlags <= 10)
                 {
