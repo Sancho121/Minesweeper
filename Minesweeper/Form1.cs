@@ -30,6 +30,9 @@ namespace Minesweeper
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             minesweeperGame.Draw(e.Graphics);
+
+            if (minesweeperGame.CoordinatesOutsideGameField(pointVisualCell.Y, pointVisualCell.X))
+                return;
             if (minesweeperGame.cells[pointVisualCell.Y, pointVisualCell.X].cellState == CellState.ClosedCell)
             {
                 e.Graphics.FillRectangle(Brushes.DarkGreen, visualCell);
@@ -62,6 +65,10 @@ namespace Minesweeper
             int cellY = e.Location.Y / minesweeperGame.cellSize;
 
             timer1.Start();
+
+            if (minesweeperGame.CoordinatesOutsideGameField(cellY, cellX))
+                return;
+
             if (e.Button == MouseButtons.Left)
             {
                 minesweeperGame.OpenCell(cellY, cellX);
@@ -71,7 +78,7 @@ namespace Minesweeper
             {
                 minesweeperGame.PutFlagInCell(cellY, cellX);
 
-                if (minesweeperGame.CountFlags <= 10)
+                if (minesweeperGame.CountFlags <= minesweeperGame.CountBombs)
                 {
                     label1CountBombs.Text = $"Мин: {minesweeperGame.CountBombs - minesweeperGame.CountFlags}";
                 }

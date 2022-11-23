@@ -111,7 +111,7 @@ namespace Minesweeper
         {
             var y = cells.Cast<Cell>();
             
-            countClosedCells = y.Count(c=>c.cellState == CellState.ClosedCell);
+            countClosedCells = y.Count(c => c.cellState == CellState.ClosedCell);
 
             countFlagCells = y.Count(c => c.cellState == CellState.FlagCell);
         }
@@ -201,7 +201,7 @@ namespace Minesweeper
         {
             locationBombs = GetCellPoints()
                 .Where(z => z != (y, x))
-                .OrderBy(x => random.NextDouble())
+                .OrderBy(z => random.NextDouble())
                 .Take(CountBombs)
                 .ToList();
 
