@@ -57,6 +57,7 @@ namespace Minesweeper
                 minesweeperGame.CellSize,
                 minesweeperGame.CellSize
                 );
+
             pictureBox1.Refresh();
         }
 

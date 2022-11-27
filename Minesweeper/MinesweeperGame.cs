@@ -75,7 +75,7 @@ namespace Minesweeper
             {
                 isFirstOpenCell = false;
                 GenerateBombs(y, x);
-                foreach (var point in GetCellPoints())
+                foreach (var point in locationBombs)
                 {                    
                     CountBombsAroundCell(point.Y, point.X);
                 }
@@ -120,7 +120,7 @@ namespace Minesweeper
             {
                 Cells[location.Y, location.X].cellState = CellState.OpenCell;
             }
-            Defeat(this, EventArgs.Empty);
+            this.Defeat(this, EventArgs.Empty);
         }
 
         private void GameWin()
@@ -129,30 +129,30 @@ namespace Minesweeper
             {
                 Cells[location.Y, location.X].cellState = CellState.FlagCell;
             }
-            Victory(this, EventArgs.Empty);
+            this.Victory(this, EventArgs.Empty);
         }
 
         private void OpenAreaAroundCell(int y, int x)
         {
-            for (int column = y - 1; column < y + 2; column++)
+            for (int line = y - 1; line < y + 2; line++)
             {
-                for (int line = x - 1; line < x + 2; line++)
+                for (int column = x - 1; column < x + 2; column++)
                 {
-                    if (CoordinatesOutsideGameField(column, line) || (column == y && line == x) || Cells[column, line].cellState == CellState.FlagCell)
+                    if (CoordinatesOutsideGameField(line, column) || (line == y && column == x) || Cells[line, column].cellState == CellState.FlagCell)
                         continue;
 
-                    if (Cells[column, line].cellState == CellState.OpenCell)
+                    if (Cells[line, column].cellState == CellState.OpenCell)
                         continue;
                   
-                    if (Cells[column, line].BombsAroundCell == 0 && Cells[column, line].IsVisitCell == false)
+                    if (Cells[line, column].BombsAroundCell == 0 && Cells[line, column].IsVisitCell == false)
                     {
-                        Cells[column, line].IsVisitCell = true;
-                        Cells[column, line].cellState = CellState.OpenCell;
-                        OpenAreaAroundCell(column, line);
+                        Cells[line, column].IsVisitCell = true;
+                        Cells[line, column].cellState = CellState.OpenCell;
+                        OpenAreaAroundCell(line, column);
                     }
                     else 
                     {
-                        Cells[column, line].cellState = CellState.OpenCell;
+                        Cells[line, column].cellState = CellState.OpenCell;
                     }
                 }
             }
@@ -160,24 +160,21 @@ namespace Minesweeper
 
         private void CountBombsAroundCell(int y, int x)
         {
-            for (int column = y - 1; column < y + 2; column++)
+            for (int line = y - 1; line < y + 2; line++)
             {
-                for (int line = x - 1; line < x + 2; line++)
+                for (int column = x - 1; column < x + 2; column++)
                 {
-                    if (CoordinatesOutsideGameField(column, line) || (column == y && line == x))
+                    if (CoordinatesOutsideGameField(line, column) || (line == y && column == x))
                         continue;
 
-                    if (Cells[column, line].IsPresenceBombInCell == true)
-                    {
-                        Cells[y, x].BombsAroundCell++;
-                    }
+                    Cells[line, column].BombsAroundCell++;
                 }
             }
         }
 
-        public bool CoordinatesOutsideGameField(int column, int line)
+        public bool CoordinatesOutsideGameField(int line, int column)
         {
-            return line < 0 || column < 0 || column == gameFieldInCells || line == gameFieldInCells;
+            return column < 0 || line < 0 || line == gameFieldInCells || column == gameFieldInCells;
         }
 
         public void PutFlagInCell(int y, int x)

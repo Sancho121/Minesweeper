@@ -12,7 +12,7 @@ namespace Minesweeper
 
         private static Image imageFlag = Properties.Resources.flag;
         private static Bitmap imageBomb = Properties.Resources.bomb;
-        private Font font = new Font(FontFamily.GenericSansSerif, 18);
+        private static Font font = new Font(FontFamily.GenericSansSerif, 18);
         public bool IsPresenceBombInCell;
         public int BombsAroundCell;
         public bool IsVisitCell;
