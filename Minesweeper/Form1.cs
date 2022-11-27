@@ -13,18 +13,19 @@ namespace Minesweeper
     partial class Form1 : Form
     {
         TimeSpan time = TimeSpan.Zero;
-        //MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
-        MinesweeperGame minesweeperGame;
+        MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
         Point pointVisualCell = new Point();
         Rectangle visualCell;
 
         public Form1()
         {
             InitializeComponent();
-            minesweeperGame = new MinesweeperGame(9, 30, this);
+            minesweeperGame.Victory += Win;
+            minesweeperGame.Defeat += Lose;
             minesweeperGame.Restart();
             label1CountBombs.Text = $"Мин: {minesweeperGame.CountBombs}";
             label2Timer.Text = time.ToString();
+
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
@@ -33,7 +34,7 @@ namespace Minesweeper
 
             if (minesweeperGame.CoordinatesOutsideGameField(pointVisualCell.Y, pointVisualCell.X))
                 return;
-            if (minesweeperGame.cells[pointVisualCell.Y, pointVisualCell.X].cellState == CellState.ClosedCell)
+            if (minesweeperGame.Cells[pointVisualCell.Y, pointVisualCell.X].cellState == CellState.ClosedCell)
             {
                 e.Graphics.FillRectangle(Brushes.DarkGreen, visualCell);
             }
@@ -47,27 +48,28 @@ namespace Minesweeper
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            pointVisualCell.X = e.Location.X / minesweeperGame.cellSize;
-            pointVisualCell.Y = e.Location.Y / minesweeperGame.cellSize;
+            pointVisualCell.X = e.Location.X / minesweeperGame.CellSize;
+            pointVisualCell.Y = e.Location.Y / minesweeperGame.CellSize;
 
             visualCell = new Rectangle(
-                pointVisualCell.X * minesweeperGame.cellSize,
-                pointVisualCell.Y * minesweeperGame.cellSize,
-                minesweeperGame.cellSize,
-                minesweeperGame.cellSize
+                pointVisualCell.X * minesweeperGame.CellSize,
+                pointVisualCell.Y * minesweeperGame.CellSize,
+                minesweeperGame.CellSize,
+                minesweeperGame.CellSize
                 );
             pictureBox1.Refresh();
         }
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
-            int cellX = e.Location.X / minesweeperGame.cellSize;
-            int cellY = e.Location.Y / minesweeperGame.cellSize;
+            int cellX = e.Location.X / minesweeperGame.CellSize;
+            int cellY = e.Location.Y / minesweeperGame.CellSize;
 
-            timer1.Start();
 
             if (minesweeperGame.CoordinatesOutsideGameField(cellY, cellX))
                 return;
+
+            timer1.Start();
 
             if (e.Button == MouseButtons.Left)
             {
@@ -86,7 +88,12 @@ namespace Minesweeper
                 {
                     label1CountBombs.Text = $"Мин: {0}";
                 }               
-            }          
+            } 
+            
+            if (e.Button == MouseButtons.Middle)
+            {
+                
+            }
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -99,7 +106,7 @@ namespace Minesweeper
             this.pictureBox1.Refresh();
         }
 
-        public void Lose()
+        public void Lose(object sender, EventArgs e)
         {
             timer1.Stop();
             this.pictureBox1.Refresh();
@@ -107,7 +114,7 @@ namespace Minesweeper
             button1_Click(this, new EventArgs());
         }
 
-        public void Win()
+        public void Win(object sender, EventArgs e)
         {
             timer1.Stop();
             this.pictureBox1.Refresh();

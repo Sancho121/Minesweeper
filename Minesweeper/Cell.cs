@@ -10,14 +10,14 @@ namespace Minesweeper
     {
         public CellState cellState;
 
-        private Image imageFlag = Properties.Resources.flag;
-        private Bitmap imageBomb = Properties.Resources.bomb;
+        private static Image imageFlag = Properties.Resources.flag;
+        private static Bitmap imageBomb = Properties.Resources.bomb;
         private Font font = new Font(FontFamily.GenericSansSerif, 18);
-        public bool isPresenceBombInCell;
-        public int bombsAroundCell;
-        public bool isVisitCell;
+        public bool IsPresenceBombInCell;
+        public int BombsAroundCell;
+        public bool IsVisitCell;
 
-        private Dictionary<int, Brush> brush = new Dictionary<int, Brush>()
+        private static Dictionary<int, Brush> brush = new Dictionary<int, Brush>()
         {
             {1, Brushes.Blue },
             {2, Brushes.Green },
@@ -29,23 +29,32 @@ namespace Minesweeper
             {8, Brushes.DarkRed },
         };
 
-        public void DrawCells(Graphics graphics, int x, int y, int cellSize)
+        public void DrawCell(Graphics graphics, int x, int y, int cellSize)
         {
-            if (bombsAroundCell > 0)
-            {                
-                graphics.DrawString($"{bombsAroundCell}", font, brush[bombsAroundCell], x * cellSize, y * cellSize);
-            }
-            if (cellState == CellState.ClosedCell)
+            switch (this.cellState)
             {
-                graphics.FillRectangle(Brushes.Aqua, x * cellSize, y * cellSize, cellSize, cellSize);
-            }
-            if (cellState == CellState.FlagCell)
-            {
-                graphics.DrawImage(imageFlag, x * cellSize, y * cellSize);
-            }
-            if (cellState == CellState.OpenCell && isPresenceBombInCell == true)
-            {
-                graphics.DrawImage(imageBomb, x * cellSize, y * cellSize);
+                case CellState.ClosedCell:
+                    graphics.FillRectangle(Brushes.Aqua, x * cellSize, y * cellSize, cellSize, cellSize);
+                    break;
+                case CellState.FlagCell:
+                    graphics.DrawImage(imageFlag, x * cellSize, y * cellSize);
+                    break;
+                case CellState.OpenCell:
+                    if (this.IsPresenceBombInCell)
+                    {
+                        graphics.DrawImage(imageBomb, x * cellSize, y * cellSize);
+                    }
+                    else
+                    {
+                        if(this.BombsAroundCell > 0)
+                        {
+                            graphics.DrawString($"{BombsAroundCell}", font, brush[BombsAroundCell], x * cellSize, y * cellSize);
+                        }
+                    }
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+                       
             }
         }
     }
