@@ -32,7 +32,7 @@ namespace Minesweeper
 
         public void Draw(Graphics graphics)
         {
-            foreach (var point in GetCellPoints())
+            foreach (var point in GetAllCellPoints())
             {
                 Cells[point.Y, point.X].DrawCell(graphics, point.X, point.Y, CellSize);
             }
@@ -44,7 +44,7 @@ namespace Minesweeper
             }
         }
 
-        private List<MyPoint> GetCellPoints()
+        private List<MyPoint> GetAllCellPoints()
         {
             List<MyPoint> cellPoints = new List<MyPoint>();
 
@@ -58,11 +58,28 @@ namespace Minesweeper
             return cellPoints;
         }
 
+        private List<MyPoint> GetPointsAroundCell(int y, int x)
+        {
+            List<MyPoint> pointsAroundCell = new List<MyPoint>();
+
+            for (int line = y - 1; line < y + 2; line++)
+            {
+                for (int column = x - 1; column < x + 2; column++)
+                {
+                    if (IsCoordinatesOutsideGameField(line, column) || (line == y && column == x))
+                        continue;
+
+                    pointsAroundCell.Add(new MyPoint(line, column));
+                }
+            }
+            return pointsAroundCell;
+        }
+
         public void Restart()
         {
             isFirstCellOpen = true;
             FlagCount = 0;
-            foreach (var point in GetCellPoints())
+            foreach (var point in GetAllCellPoints())
             {
                 Cells[point.Y, point.X] = new Cell();
                 Cells[point.Y, point.X].cellState = CellState.ClosedCell;
@@ -105,6 +122,18 @@ namespace Minesweeper
             }
         }
 
+        public void SmartOpenCell(int y, int x)
+        {          
+            //var m = GetPointsAroundCell(y, x)
+            //    .Count(z => Cells[z.Y, z.X].cellState == CellState.FlagCell);
+            
+            if (Cells[y, x].cellState == CellState.OpenCell && 
+                Cells[y, x].BombsAroundCell == GetPointsAroundCell(y, x).Count(k => Cells[k.Y, k.X].cellState == CellState.FlagCell))
+            {
+
+            }
+        }
+
         private int CountClosedAndFlagCells()
         {
             return this.Cells
@@ -133,40 +162,29 @@ namespace Minesweeper
 
         private void OpenAreaAroundCell(int y, int x)
         {
-            for (int line = y - 1; line < y + 2; line++)
+            foreach (var point in GetPointsAroundCell(y, x))
             {
-                for (int column = x - 1; column < x + 2; column++)
-                {
-                    if (IsCoordinatesOutsideGameField(line, column) || (line == y && column == x) || Cells[line, column].cellState == CellState.FlagCell)
-                        continue;
+                if (Cells[point.Y, point.X].cellState == CellState.OpenCell ||
+                    Cells[point.Y, point.X].cellState == CellState.FlagCell)
+                    continue;
 
-                    if (Cells[line, column].cellState == CellState.OpenCell)
-                        continue;
-                  
-                    if (Cells[line, column].BombsAroundCell == 0 && Cells[line, column].cellState == CellState.ClosedCell)
-                    {
-                        Cells[line, column].cellState = CellState.OpenCell;
-                        OpenAreaAroundCell(line, column);
-                    }
-                    else 
-                    {
-                        Cells[line, column].cellState = CellState.OpenCell;
-                    }
+                if (Cells[point.Y, point.X].BombsAroundCell == 0 && Cells[point.Y, point.X].cellState == CellState.ClosedCell)
+                {
+                    Cells[point.Y, point.X].cellState = CellState.OpenCell;
+                    OpenAreaAroundCell(point.Y, point.X);
+                }
+                else
+                {
+                    Cells[point.Y, point.X].cellState = CellState.OpenCell;
                 }
             }
         }
 
         private void CountBombsAroundCell(int y, int x)
         {
-            for (int line = y - 1; line < y + 2; line++)
+            foreach (MyPoint point in GetPointsAroundCell(y, x))
             {
-                for (int column = x - 1; column < x + 2; column++)
-                {
-                    if (IsCoordinatesOutsideGameField(line, column) || (line == y && column == x))
-                        continue;
-
-                    Cells[line, column].BombsAroundCell++;
-                }
+                Cells[point.Y, point.X].BombsAroundCell++;
             }
         }
 
@@ -193,7 +211,7 @@ namespace Minesweeper
 
         private void GenerateBombs(int y, int x)
         {
-            bombPositions = GetCellPoints()
+            bombPositions = GetAllCellPoints()
                 .Where(z => z.Y != y || z.X != x)
                 .OrderBy(z => random.NextDouble())
                 .Take(BombCount)

@@ -91,11 +91,11 @@ namespace Minesweeper
                 {
                     bombCountLabel.Text = $"Мин: {0}";
                 }               
-            } 
-            
+            }
+
             if (e.Button == MouseButtons.Middle)
             {
-                
+                minesweeperGame.SmartOpenCell(cellY, cellX);
             }
 
             pictureBox1.Refresh();
