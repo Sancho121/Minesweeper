@@ -10,14 +10,13 @@ namespace Minesweeper
     {
         public CellState cellState;
 
-        private static Image imageFlag = Properties.Resources.flag;
-        private static Bitmap imageBomb = Properties.Resources.bomb;
+        private static Image flagImage = Properties.Resources.flag;
+        private static Image bombImage = Properties.Resources.bomb;
         private static Font font = new Font(FontFamily.GenericSansSerif, 18);
-        public bool IsPresenceBombInCell;
+        public bool HasBomb;
         public int BombsAroundCell;
-        public bool IsVisitCell;
 
-        private static Dictionary<int, Brush> brush = new Dictionary<int, Brush>()
+        private static Dictionary<int, Brush> brushByBombCount = new Dictionary<int, Brush>()
         {
             {1, Brushes.Blue },
             {2, Brushes.Green },
@@ -37,24 +36,23 @@ namespace Minesweeper
                     graphics.FillRectangle(Brushes.Aqua, x * cellSize, y * cellSize, cellSize, cellSize);
                     break;
                 case CellState.FlagCell:
-                    graphics.DrawImage(imageFlag, x * cellSize, y * cellSize);
+                    graphics.DrawImage(flagImage, x * cellSize, y * cellSize);
                     break;
                 case CellState.OpenCell:
-                    if (this.IsPresenceBombInCell)
+                    if (this.HasBomb)
                     {
-                        graphics.DrawImage(imageBomb, x * cellSize, y * cellSize);
+                        graphics.DrawImage(bombImage, x * cellSize, y * cellSize);
                     }
                     else
                     {
                         if(this.BombsAroundCell > 0)
                         {
-                            graphics.DrawString($"{BombsAroundCell}", font, brush[BombsAroundCell], x * cellSize, y * cellSize);
+                            graphics.DrawString($"{BombsAroundCell}", font, brushByBombCount[BombsAroundCell], x * cellSize, y * cellSize);
                         }
                     }
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException();
-                       
+                    throw new ArgumentOutOfRangeException();                      
             }
         }
     }

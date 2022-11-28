@@ -32,9 +32,9 @@ namespace Minesweeper
             this.components = new System.ComponentModel.Container();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.button1 = new System.Windows.Forms.Button();
-            this.label1CountBombs = new System.Windows.Forms.Label();
+            this.bombCountLabel = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
-            this.label2Timer = new System.Windows.Forms.Label();
+            this.elapsedTimeLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -59,36 +59,36 @@ namespace Minesweeper
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
-            // label1CountBombs
+            // bombCountLabel
             // 
-            this.label1CountBombs.AutoSize = true;
-            this.label1CountBombs.Location = new System.Drawing.Point(174, 345);
-            this.label1CountBombs.Name = "label1CountBombs";
-            this.label1CountBombs.Size = new System.Drawing.Size(108, 15);
-            this.label1CountBombs.TabIndex = 3;
-            this.label1CountBombs.Text = "label1CountBombs";
+            this.bombCountLabel.AutoSize = true;
+            this.bombCountLabel.Location = new System.Drawing.Point(174, 345);
+            this.bombCountLabel.Name = "bombCountLabel";
+            this.bombCountLabel.Size = new System.Drawing.Size(100, 15);
+            this.bombCountLabel.TabIndex = 3;
+            this.bombCountLabel.Text = "bombCountLabel";
             // 
             // timer1
             // 
             this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
-            // label2Timer
+            // elapsedTimeLabel
             // 
-            this.label2Timer.AutoSize = true;
-            this.label2Timer.Location = new System.Drawing.Point(377, 345);
-            this.label2Timer.Name = "label2Timer";
-            this.label2Timer.Size = new System.Drawing.Size(68, 15);
-            this.label2Timer.TabIndex = 5;
-            this.label2Timer.Text = "label2Timer";
+            this.elapsedTimeLabel.AutoSize = true;
+            this.elapsedTimeLabel.Location = new System.Drawing.Point(377, 345);
+            this.elapsedTimeLabel.Name = "elapsedTimeLabel";
+            this.elapsedTimeLabel.Size = new System.Drawing.Size(101, 15);
+            this.elapsedTimeLabel.TabIndex = 5;
+            this.elapsedTimeLabel.Text = "elapsedTimeLabel";
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(594, 450);
-            this.Controls.Add(this.label2Timer);
-            this.Controls.Add(this.label1CountBombs);
+            this.Controls.Add(this.elapsedTimeLabel);
+            this.Controls.Add(this.bombCountLabel);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
@@ -104,8 +104,8 @@ namespace Minesweeper
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Timer timer1;
-        private System.Windows.Forms.Label label2Timer;
-        private System.Windows.Forms.Label label1CountBombs;
+        private System.Windows.Forms.Label elapsedTimeLabel;
+        private System.Windows.Forms.Label bombCountLabel;
     }
 }
 

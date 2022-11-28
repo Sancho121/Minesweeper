@@ -12,53 +12,56 @@ namespace Minesweeper
 {
     partial class Form1 : Form
     {
-        TimeSpan time = TimeSpan.Zero;
+        TimeSpan elapsedTime = TimeSpan.Zero;
         MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
-        Point pointVisualCell = new Point();
-        Rectangle visualCell;
+        Point pointHighlightedCell = new Point();
+        Rectangle HighlightedCell;
 
         public Form1()
         {
             InitializeComponent();
-            minesweeperGame.Victory += Win;
-            minesweeperGame.Defeat += Lose;
+            minesweeperGame.Victory += OnVictory;
+            minesweeperGame.Defeat += OnDefeat;
             minesweeperGame.Restart();
-            label1CountBombs.Text = $"Мин: {minesweeperGame.CountBombs}";
-            label2Timer.Text = time.ToString();
-
+            bombCountLabel.Text = $"Мин: {minesweeperGame.BombCount}";
+            elapsedTimeLabel.Text = elapsedTime.ToString();
         }
 
         private void pictureBox1_Paint(object sender, PaintEventArgs e)
         {
             minesweeperGame.Draw(e.Graphics);
 
-            if (minesweeperGame.CoordinatesOutsideGameField(pointVisualCell.Y, pointVisualCell.X))
+            if (minesweeperGame.IsCoordinatesOutsideGameField(pointHighlightedCell.Y, pointHighlightedCell.X))
                 return;
-            if (minesweeperGame.Cells[pointVisualCell.Y, pointVisualCell.X].cellState == CellState.ClosedCell)
+            if (minesweeperGame.Cells[pointHighlightedCell.Y, pointHighlightedCell.X].cellState == CellState.ClosedCell)
             {
-                e.Graphics.FillRectangle(Brushes.DarkGreen, visualCell);
+                e.Graphics.FillRectangle(Brushes.DarkGreen, HighlightedCell);
             }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
-        {                      
-            time += TimeSpan.FromSeconds(1);
-            label2Timer.Text = time.ToString();
+        {
+            elapsedTime += TimeSpan.FromSeconds(1);
+            elapsedTimeLabel.Text = elapsedTime.ToString();
         }
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            pointVisualCell.X = e.Location.X / minesweeperGame.CellSize;
-            pointVisualCell.Y = e.Location.Y / minesweeperGame.CellSize;
+            if (pointHighlightedCell.X != e.Location.X / minesweeperGame.CellSize ||
+                pointHighlightedCell.Y != e.Location.Y / minesweeperGame.CellSize)
+            {
+                pointHighlightedCell.X = e.Location.X / minesweeperGame.CellSize;
+                pointHighlightedCell.Y = e.Location.Y / minesweeperGame.CellSize;
 
-            visualCell = new Rectangle(
-                pointVisualCell.X * minesweeperGame.CellSize,
-                pointVisualCell.Y * minesweeperGame.CellSize,
+                HighlightedCell = new Rectangle(
+                pointHighlightedCell.X * minesweeperGame.CellSize,
+                pointHighlightedCell.Y * minesweeperGame.CellSize,
                 minesweeperGame.CellSize,
                 minesweeperGame.CellSize
                 );
 
-            pictureBox1.Refresh();
+                pictureBox1.Refresh();
+            }
         }
 
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
@@ -66,8 +69,7 @@ namespace Minesweeper
             int cellX = e.Location.X / minesweeperGame.CellSize;
             int cellY = e.Location.Y / minesweeperGame.CellSize;
 
-
-            if (minesweeperGame.CoordinatesOutsideGameField(cellY, cellX))
+            if (minesweeperGame.IsCoordinatesOutsideGameField(cellY, cellX))
                 return;
 
             timer1.Start();
@@ -81,13 +83,13 @@ namespace Minesweeper
             {
                 minesweeperGame.PutFlagInCell(cellY, cellX);
 
-                if (minesweeperGame.CountFlags <= minesweeperGame.CountBombs)
+                if (minesweeperGame.FlagCount <= minesweeperGame.BombCount)
                 {
-                    label1CountBombs.Text = $"Мин: {minesweeperGame.CountBombs - minesweeperGame.CountFlags}";
+                    bombCountLabel.Text = $"Мин: {minesweeperGame.BombCount - minesweeperGame.FlagCount}";
                 }
                 else
                 {
-                    label1CountBombs.Text = $"Мин: {0}";
+                    bombCountLabel.Text = $"Мин: {0}";
                 }               
             } 
             
@@ -95,19 +97,21 @@ namespace Minesweeper
             {
                 
             }
+
+            pictureBox1.Refresh();
         }
 
         private void button1_Click(object sender, EventArgs e)
         {          
             minesweeperGame.Restart();
             timer1.Stop();
-            time = TimeSpan.Zero;
-            label2Timer.Text = time.ToString();
-            label1CountBombs.Text = $"Мин: {minesweeperGame.CountBombs}";
+            elapsedTime = TimeSpan.Zero;
+            elapsedTimeLabel.Text = elapsedTime.ToString();
+            bombCountLabel.Text = $"Мин: {minesweeperGame.BombCount}";
             this.pictureBox1.Refresh();
         }
 
-        public void Lose(object sender, EventArgs e)
+        public void OnDefeat(object sender, EventArgs e)
         {
             timer1.Stop();
             this.pictureBox1.Refresh();
@@ -115,7 +119,7 @@ namespace Minesweeper
             button1_Click(this, new EventArgs());
         }
 
-        public void Win(object sender, EventArgs e)
+        public void OnVictory(object sender, EventArgs e)
         {
             timer1.Stop();
             this.pictureBox1.Refresh();

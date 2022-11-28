@@ -14,20 +14,20 @@ namespace Minesweeper
         public readonly int CellSize;
         public Cell[,] Cells;
         private Random random = new Random();
-        private MyPoint[] locationBombs;
-        private bool isFirstOpenCell = true;
+        private MyPoint[] bombPositions;
+        private bool isFirstCellOpen = true;
         public event EventHandler Victory = delegate { };
         public event EventHandler Defeat = delegate { };
 
-        public int CountBombs { get; private set; } = 10;
-        public int CountFlags { get; private set; } = 0;
+        public int BombCount { get; private set; } = 10;
+        public int FlagCount { get; private set; } = 0;
 
         public MinesweeperGame(int gameFieldInCells, int cellSize)
         {
             this.gameFieldInCells = gameFieldInCells;
             this.CellSize = cellSize;
             Cells = new Cell[gameFieldInCells, gameFieldInCells];
-            locationBombs = new MyPoint[] { };
+            bombPositions = new MyPoint[] { };
         }
 
         public void Draw(Graphics graphics)
@@ -60,8 +60,8 @@ namespace Minesweeper
 
         public void Restart()
         {
-            isFirstOpenCell = true;
-            CountFlags = 0;
+            isFirstCellOpen = true;
+            FlagCount = 0;
             foreach (var point in GetCellPoints())
             {
                 Cells[point.Y, point.X] = new Cell();
@@ -71,28 +71,27 @@ namespace Minesweeper
 
         public void OpenCell(int y, int x)
         {
-            if (isFirstOpenCell)
+            if (isFirstCellOpen)
             {
-                isFirstOpenCell = false;
+                isFirstCellOpen = false;
                 GenerateBombs(y, x);
-                foreach (var point in locationBombs)
+                foreach (var position in bombPositions)
                 {                    
-                    CountBombsAroundCell(point.Y, point.X);
+                    CountBombsAroundCell(position.Y, position.X);
                 }
             }
 
             if (Cells[y, x].cellState == CellState.ClosedCell)
             {
-                Cells[y, x].IsVisitCell = true;
                 Cells[y, x].cellState = CellState.OpenCell;
             }
 
             if (Cells[y, x].cellState == CellState.FlagCell)
                 return;
 
-            if (Cells[y, x].cellState == CellState.OpenCell && Cells[y, x].IsPresenceBombInCell == true)
+            if (Cells[y, x].cellState == CellState.OpenCell && Cells[y, x].HasBomb == true)
             {
-                GameLose();
+                ProcessDefeat();
             }
 
             if (Cells[y, x].cellState == CellState.OpenCell && Cells[y, x].BombsAroundCell == 0)
@@ -100,9 +99,9 @@ namespace Minesweeper
                 OpenAreaAroundCell(y, x);
             }
           
-            if (CountClosedAndFlagCells() == CountBombs)
+            if (CountClosedAndFlagCells() == BombCount)
             {
-                GameWin();
+                ProcessVictory();
             }
         }
 
@@ -114,20 +113,20 @@ namespace Minesweeper
                             c.cellState == CellState.FlagCell);
         }
 
-        private void GameLose()
+        private void ProcessDefeat()
         {
-            foreach (var location in locationBombs)
+            foreach (var position in bombPositions)
             {
-                Cells[location.Y, location.X].cellState = CellState.OpenCell;
+                Cells[position.Y, position.X].cellState = CellState.OpenCell;
             }
             this.Defeat(this, EventArgs.Empty);
         }
 
-        private void GameWin()
+        private void ProcessVictory()
         {
-            foreach (var location in locationBombs)
+            foreach (var position in bombPositions)
             {
-                Cells[location.Y, location.X].cellState = CellState.FlagCell;
+                Cells[position.Y, position.X].cellState = CellState.FlagCell;
             }
             this.Victory(this, EventArgs.Empty);
         }
@@ -138,15 +137,14 @@ namespace Minesweeper
             {
                 for (int column = x - 1; column < x + 2; column++)
                 {
-                    if (CoordinatesOutsideGameField(line, column) || (line == y && column == x) || Cells[line, column].cellState == CellState.FlagCell)
+                    if (IsCoordinatesOutsideGameField(line, column) || (line == y && column == x) || Cells[line, column].cellState == CellState.FlagCell)
                         continue;
 
                     if (Cells[line, column].cellState == CellState.OpenCell)
                         continue;
                   
-                    if (Cells[line, column].BombsAroundCell == 0 && Cells[line, column].IsVisitCell == false)
+                    if (Cells[line, column].BombsAroundCell == 0 && Cells[line, column].cellState == CellState.ClosedCell)
                     {
-                        Cells[line, column].IsVisitCell = true;
                         Cells[line, column].cellState = CellState.OpenCell;
                         OpenAreaAroundCell(line, column);
                     }
@@ -164,7 +162,7 @@ namespace Minesweeper
             {
                 for (int column = x - 1; column < x + 2; column++)
                 {
-                    if (CoordinatesOutsideGameField(line, column) || (line == y && column == x))
+                    if (IsCoordinatesOutsideGameField(line, column) || (line == y && column == x))
                         continue;
 
                     Cells[line, column].BombsAroundCell++;
@@ -172,9 +170,9 @@ namespace Minesweeper
             }
         }
 
-        public bool CoordinatesOutsideGameField(int line, int column)
+        public bool IsCoordinatesOutsideGameField(int y, int x)
         {
-            return column < 0 || line < 0 || line == gameFieldInCells || column == gameFieldInCells;
+            return x < 0 || y < 0 || y >= gameFieldInCells || x >= gameFieldInCells;
         }
 
         public void PutFlagInCell(int y, int x)
@@ -182,12 +180,12 @@ namespace Minesweeper
             switch (Cells[y, x].cellState)
             {
                 case CellState.ClosedCell:
-                    CountFlags++;
+                    FlagCount++;
                     Cells[y, x].cellState = CellState.FlagCell;
 
                     break;
                 case CellState.FlagCell:
-                    CountFlags--;
+                    FlagCount--;
                     Cells[y, x].cellState = CellState.ClosedCell;
                     break;
             }
@@ -195,15 +193,15 @@ namespace Minesweeper
 
         private void GenerateBombs(int y, int x)
         {
-            locationBombs = GetCellPoints()
+            bombPositions = GetCellPoints()
                 .Where(z => z.Y != y || z.X != x)
                 .OrderBy(z => random.NextDouble())
-                .Take(CountBombs)
+                .Take(BombCount)
                 .ToArray();
 
-            foreach (var location in locationBombs)
+            foreach (var position in bombPositions)
             {
-                Cells[location.Y, location.X].IsPresenceBombInCell = true;
+                Cells[position.Y, position.X].HasBomb = true;
             }
         }
     }
