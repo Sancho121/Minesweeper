@@ -14,7 +14,7 @@ namespace Minesweeper
     {
         TimeSpan elapsedTime = TimeSpan.Zero;
         MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
-        Point pointHighlightedCell = new Point();
+        Point pointHighlightedCell = new Point(-100, -100);
         Rectangle HighlightedCell;
 
         public Form1()
