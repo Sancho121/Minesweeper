@@ -44,18 +44,15 @@ namespace Minesweeper
             }
         }
 
-        private List<MyPoint> GetAllCellPoints()
+        private IEnumerable<MyPoint> GetAllCellPoints()
         {
-            List<MyPoint> cellPoints = new List<MyPoint>();
-
             for (int y = 0; y < gameFieldInCells; y++)
             {
                 for (int x = 0; x < gameFieldInCells; x++)
                 {
-                    cellPoints.Add(new MyPoint(y, x));                    
+                    yield return new MyPoint(y, x);
                 }
             }
-            return cellPoints;
         }
 
         private List<MyPoint> GetPointsAroundCell(int y, int x)
@@ -93,7 +90,7 @@ namespace Minesweeper
                 isFirstCellOpen = false;
                 GenerateBombs(y, x);
                 foreach (var position in bombPositions)
-                {                    
+                {
                     CountBombsAroundCell(position.Y, position.X);
                 }
             }
@@ -115,7 +112,7 @@ namespace Minesweeper
             {
                 OpenAreaAroundCell(y, x);
             }
-          
+
             if (CountClosedAndFlagCells() == BombCount)
             {
                 ProcessVictory();
@@ -123,14 +120,28 @@ namespace Minesweeper
         }
 
         public void SmartOpenCell(int y, int x)
-        {          
-            //var m = GetPointsAroundCell(y, x)
-            //    .Count(z => Cells[z.Y, z.X].cellState == CellState.FlagCell);
-            
-            if (Cells[y, x].cellState == CellState.OpenCell && 
+        {
+            if (Cells[y, x].cellState == CellState.OpenCell &&
                 Cells[y, x].BombsAroundCell == GetPointsAroundCell(y, x).Count(k => Cells[k.Y, k.X].cellState == CellState.FlagCell))
             {
+                foreach (var position in GetPointsAroundCell(y, x))
+                {
+                    if (Cells[position.Y, position.X].HasBomb == true && Cells[position.Y, position.X].cellState != CellState.FlagCell)
+                    {
+                        ProcessDefeat();
+                        return;
+                    }
 
+                    if (Cells[position.Y, position.X].cellState == CellState.ClosedCell && Cells[position.Y, position.X].HasBomb == false)
+                    {
+                        Cells[position.Y, position.X].cellState = CellState.OpenCell;
+
+                        if (Cells[position.Y, position.X].BombsAroundCell == 0)
+                        {
+                            OpenAreaAroundCell(position.Y, position.X);
+                        }
+                    }
+                }
             }
         }
 
