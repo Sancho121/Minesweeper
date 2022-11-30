@@ -16,6 +16,8 @@ namespace Minesweeper
         MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
         Point pointHighlightedCell = new Point(-100, -100);
         Rectangle HighlightedCell;
+        bool isPressedLeftMouseButton;
+        bool isPressedRightMouseButton;
 
         public Form1()
         {
@@ -93,11 +95,15 @@ namespace Minesweeper
                 }               
             }
 
-            if (e.Button == MouseButtons.Middle)
+            if (e.Button == MouseButtons.Middle ||
+               (isPressedRightMouseButton == true && e.Button == MouseButtons.Left) ||
+               (isPressedLeftMouseButton == true && e.Button == MouseButtons.Right))
             {
                 minesweeperGame.SmartOpenCell(cellY, cellX);
             }
 
+            isPressedRightMouseButton = false;
+            isPressedLeftMouseButton = false;
             pictureBox1.Refresh();
         }
 
@@ -125,6 +131,19 @@ namespace Minesweeper
             this.pictureBox1.Refresh();
             MessageBox.Show("вин");
             button1_Click(this, new EventArgs());
+        }
+
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+
+            if (e.Button == MouseButtons.Left)
+            {
+                isPressedLeftMouseButton = true;
+            }
+            if (e.Button == MouseButtons.Right)
+            {
+                isPressedRightMouseButton = true;
+            }
         }
     }
 }
