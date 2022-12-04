@@ -57,8 +57,6 @@ namespace Minesweeper
 
         private IEnumerable<MyPoint> GetPointsAroundCell(int y, int x)
         {
-
-
             for (int line = y - 1; line < y + 2; line++)
             {
                 for (int column = x - 1; column < x + 2; column++)
@@ -66,7 +64,7 @@ namespace Minesweeper
                     if (IsCoordinatesOutsideGameField(line, column) || (line == y && column == x))
                         continue;
 
-                    yield return new MyPoint(y, x);
+                    yield return new MyPoint(line, column);
                 }
             }
         }
@@ -87,11 +85,7 @@ namespace Minesweeper
             if (isFirstCellOpen)
             {
                 isFirstCellOpen = false;
-                GenerateBombs(y, x);
-                foreach (var position in bombPositions)
-                {
-                    CountBombsAroundCell(position.Y, position.X);
-                }
+                GenerateBombs(excludedPosition: new MyPoint(y, x));
             }
 
             if (Cells[y, x].cellState == CellState.ClosedCell)
@@ -191,6 +185,21 @@ namespace Minesweeper
             }
         }
 
+        private void GenerateBombs(MyPoint excludedPosition)
+        {
+            bombPositions = GetAllCellPoints()
+                .Where(z => z.Y != excludedPosition.Y || z.X != excludedPosition.X)
+                .OrderBy(z => random.NextDouble())
+                .Take(BombCount)
+                .ToArray();
+
+            foreach (var position in bombPositions)
+            {
+                Cells[position.Y, position.X].HasBomb = true;
+                CountBombsAroundCell(position.Y, position.X);
+            }
+        }
+
         private void CountBombsAroundCell(int y, int x)
         {
             foreach (var point in GetPointsAroundCell(y, x))
@@ -218,20 +227,6 @@ namespace Minesweeper
                     Cells[y, x].cellState = CellState.ClosedCell;
                     break;
             }
-        }
-
-        private void GenerateBombs(int y, int x)
-        {
-            bombPositions = GetAllCellPoints()
-                .Where(z => z.Y != y || z.X != x)
-                .OrderBy(z => random.NextDouble())
-                .Take(BombCount)
-                .ToArray();
-
-            foreach (var position in bombPositions)
-            {
-                Cells[position.Y, position.X].HasBomb = true;
-            }
-        }
+        }       
     }
 }

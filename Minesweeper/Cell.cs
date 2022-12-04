@@ -47,7 +47,7 @@ namespace Minesweeper
                     {
                         if(this.BombsAroundCell > 0)
                         {
-                            graphics.DrawString($"{BombsAroundCell}", font, brushByBombCount[BombsAroundCell], x * cellSize, y * cellSize);
+                            graphics.DrawString($"{BombsAroundCell}", font, brushByBombCount[BombsAroundCell], x * cellSize + 4, y * cellSize);
                         }
                     }
                     break;

@@ -12,12 +12,12 @@ namespace Minesweeper
 {
     partial class Form1 : Form
     {
-        TimeSpan elapsedTime = TimeSpan.Zero;
-        MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
-        Point pointHighlightedCell = new Point(-100, -100);
-        Rectangle HighlightedCell;
-        bool isPressedLeftMouseButton;
-        bool isPressedRightMouseButton;
+        private TimeSpan elapsedTime = TimeSpan.Zero;
+        private MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
+        private Point pointHighlightedCell = new Point(-100, -100);
+        private Rectangle HighlightedCell;
+        private bool isPressedLeftMouseButton;
+        private bool isPressedRightMouseButton;
 
         public Form1()
         {
@@ -137,7 +137,7 @@ namespace Minesweeper
         {
 
             if (e.Button == MouseButtons.Left)
-            {
+            {               
                 isPressedLeftMouseButton = true;
             }
             if (e.Button == MouseButtons.Right)
