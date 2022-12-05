@@ -117,20 +117,20 @@ namespace Minesweeper
             this.pictureBox1.Refresh();
         }
 
-        public void OnDefeat(object sender, EventArgs e)
+        private void OnDefeat(object sender, EventArgs e)
         {
             timer1.Stop();
             this.pictureBox1.Refresh();
             MessageBox.Show("луз");
-            button1_Click(this, new EventArgs());
+            button1_Click(this, EventArgs.Empty);
         }
 
-        public void OnVictory(object sender, EventArgs e)
+        private void OnVictory(object sender, EventArgs e)
         {
             timer1.Stop();
             this.pictureBox1.Refresh();
             MessageBox.Show("вин");
-            button1_Click(this, new EventArgs());
+            button1_Click(this, EventArgs.Empty);
         }
 
         private void pictureBox1_MouseDown(object sender, MouseEventArgs e)

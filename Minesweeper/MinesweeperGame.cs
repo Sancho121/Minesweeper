@@ -15,7 +15,7 @@ namespace Minesweeper
         public Cell[,] Cells;
         private Random random = new Random();
         private MyPoint[] bombPositions;
-        private bool isFirstCellOpen = true;
+        private bool isFirstClickOnCell = true;
         public event EventHandler Victory = delegate { };
         public event EventHandler Defeat = delegate { };
 
@@ -71,7 +71,7 @@ namespace Minesweeper
 
         public void Restart()
         {
-            isFirstCellOpen = true;
+            isFirstClickOnCell = true;
             FlagCount = 0;
             foreach (var point in GetAllCellPoints())
             {
@@ -82,9 +82,9 @@ namespace Minesweeper
 
         public void OpenCell(int y, int x)
         {
-            if (isFirstCellOpen)
+            if (isFirstClickOnCell)
             {
-                isFirstCellOpen = false;
+                isFirstClickOnCell = false;
                 GenerateBombs(excludedPosition: new MyPoint(y, x));
             }
 
@@ -129,6 +129,12 @@ namespace Minesweeper
                     if (Cells[point.Y, point.X].cellState == CellState.ClosedCell && Cells[point.Y, point.X].HasBomb == false)
                     {
                         Cells[point.Y, point.X].cellState = CellState.OpenCell;
+
+                        if (CountClosedAndFlagCells() == BombCount)
+                        {
+                            ProcessVictory();
+                            return;
+                        }
 
                         if (Cells[point.Y, point.X].BombsAroundCell == 0)
                         {
@@ -220,7 +226,6 @@ namespace Minesweeper
                 case CellState.ClosedCell:
                     FlagCount++;
                     Cells[y, x].cellState = CellState.FlagCell;
-
                     break;
                 case CellState.FlagCell:
                     FlagCount--;
