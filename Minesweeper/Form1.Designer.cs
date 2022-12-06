@@ -31,7 +31,7 @@ namespace Minesweeper
         {
             this.components = new System.ComponentModel.Container();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.restartButton = new System.Windows.Forms.Button();
             this.bombCountLabel = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.elapsedTimeLabel = new System.Windows.Forms.Label();
@@ -50,15 +50,15 @@ namespace Minesweeper
             this.pictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseMove);
             this.pictureBox1.MouseUp += new System.Windows.Forms.MouseEventHandler(this.pictureBox1_MouseUp);
             // 
-            // button1
+            // restartButton
             // 
-            this.button1.Location = new System.Drawing.Point(174, 29);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 1;
-            this.button1.Text = "Рестарт";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.restartButton.Location = new System.Drawing.Point(174, 29);
+            this.restartButton.Name = "restartButton";
+            this.restartButton.Size = new System.Drawing.Size(75, 23);
+            this.restartButton.TabIndex = 1;
+            this.restartButton.Text = "Рестарт";
+            this.restartButton.UseVisualStyleBackColor = true;
+            this.restartButton.Click += new System.EventHandler(this.restartButton_Click);
             // 
             // bombCountLabel
             // 
@@ -90,7 +90,7 @@ namespace Minesweeper
             this.ClientSize = new System.Drawing.Size(594, 450);
             this.Controls.Add(this.elapsedTimeLabel);
             this.Controls.Add(this.bombCountLabel);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.restartButton);
             this.Controls.Add(this.pictureBox1);
             this.Name = "Form1";
             this.Text = "Сапер";
@@ -103,7 +103,7 @@ namespace Minesweeper
         #endregion
 
         private System.Windows.Forms.PictureBox pictureBox1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button restartButton;
         private System.Windows.Forms.Timer timer1;
         private System.Windows.Forms.Label elapsedTimeLabel;
         private System.Windows.Forms.Label bombCountLabel;

@@ -29,24 +29,6 @@ namespace Minesweeper
             elapsedTimeLabel.Text = elapsedTime.ToString();
         }
 
-        private void pictureBox1_Paint(object sender, PaintEventArgs e)
-        {
-            minesweeperGame.Draw(e.Graphics);
-
-            if (minesweeperGame.IsCoordinatesOutsideGameField(pointHighlightedCell.Y, pointHighlightedCell.X))
-                return;
-            if (minesweeperGame.Cells[pointHighlightedCell.Y, pointHighlightedCell.X].cellState == CellState.ClosedCell)
-            {
-                e.Graphics.FillRectangle(Brushes.DarkGreen, HighlightedCell);
-            }
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-            elapsedTime += TimeSpan.FromSeconds(1);
-            elapsedTimeLabel.Text = elapsedTime.ToString();
-        }
-
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
             if (pointHighlightedCell.X != e.Location.X / minesweeperGame.CellSize ||
@@ -107,7 +89,19 @@ namespace Minesweeper
             pictureBox1.Refresh();
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left)
+            {
+                isPressedLeftMouseButton = true;
+            }
+            if (e.Button == MouseButtons.Right)
+            {
+                isPressedRightMouseButton = true;
+            }
+        }
+
+        private void restartButton_Click(object sender, EventArgs e)
         {          
             minesweeperGame.Restart();
             timer1.Stop();
@@ -117,12 +111,30 @@ namespace Minesweeper
             this.pictureBox1.Refresh();
         }
 
+        private void pictureBox1_Paint(object sender, PaintEventArgs e)
+        {
+            minesweeperGame.Draw(e.Graphics);
+
+            if (minesweeperGame.IsCoordinatesOutsideGameField(pointHighlightedCell.Y, pointHighlightedCell.X))
+                return;
+            if (minesweeperGame.Cells[pointHighlightedCell.Y, pointHighlightedCell.X].cellState == CellState.ClosedCell)
+            {
+                e.Graphics.FillRectangle(Brushes.DarkGreen, HighlightedCell);
+            }
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            elapsedTime += TimeSpan.FromSeconds(1);
+            elapsedTimeLabel.Text = elapsedTime.ToString();
+        }
+        
         private void OnDefeat(object sender, EventArgs e)
         {
             timer1.Stop();
             this.pictureBox1.Refresh();
             MessageBox.Show("луз");
-            button1_Click(this, EventArgs.Empty);
+            restartButton_Click(this, EventArgs.Empty);
         }
 
         private void OnVictory(object sender, EventArgs e)
@@ -130,20 +142,7 @@ namespace Minesweeper
             timer1.Stop();
             this.pictureBox1.Refresh();
             MessageBox.Show("вин");
-            button1_Click(this, EventArgs.Empty);
-        }
-
-        private void pictureBox1_MouseDown(object sender, MouseEventArgs e)
-        {
-
-            if (e.Button == MouseButtons.Left)
-            {               
-                isPressedLeftMouseButton = true;
-            }
-            if (e.Button == MouseButtons.Right)
-            {
-                isPressedRightMouseButton = true;
-            }
-        }
+            restartButton_Click(this, EventArgs.Empty);
+        }      
     }
 }
