@@ -53,19 +53,19 @@ namespace Minesweeper
             int cellX = e.Location.X / minesweeperGame.CellSize;
             int cellY = e.Location.Y / minesweeperGame.CellSize;
 
-            if (minesweeperGame.IsCoordinatesOutsideGameField(cellY, cellX))
+            if (minesweeperGame.IsCoordinatesOutsideGameField(cellX, cellY))
                 return;
 
             timer1.Start();
 
             if (e.Button == MouseButtons.Left)
             {
-                minesweeperGame.OpenCell(cellY, cellX);
+                minesweeperGame.OpenCell(cellX, cellY);
             }
 
             if (e.Button == MouseButtons.Right)
             {
-                minesweeperGame.PutFlagInCell(cellY, cellX);
+                minesweeperGame.PutFlagInCell(cellX, cellY);
 
                 if (minesweeperGame.FlagCount <= minesweeperGame.BombCount)
                 {
@@ -81,7 +81,7 @@ namespace Minesweeper
                (isPressedRightMouseButton == true && e.Button == MouseButtons.Left) ||
                (isPressedLeftMouseButton == true && e.Button == MouseButtons.Right))
             {
-                minesweeperGame.SmartOpenCell(cellY, cellX);
+                minesweeperGame.SmartOpenCell(cellX, cellY);
             }
 
             isPressedRightMouseButton = false;
@@ -115,9 +115,9 @@ namespace Minesweeper
         {
             minesweeperGame.Draw(e.Graphics);
 
-            if (minesweeperGame.IsCoordinatesOutsideGameField(pointHighlightedCell.Y, pointHighlightedCell.X))
+            if (minesweeperGame.IsCoordinatesOutsideGameField(pointHighlightedCell.X, pointHighlightedCell.Y))
                 return;
-            if (minesweeperGame.Cells[pointHighlightedCell.Y, pointHighlightedCell.X].cellState == CellState.ClosedCell)
+            if (minesweeperGame.Cells[pointHighlightedCell.X, pointHighlightedCell.Y].cellState == CellState.ClosedCell)
             {
                 e.Graphics.FillRectangle(Brushes.DarkGreen, HighlightedCell);
             }

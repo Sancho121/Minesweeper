@@ -6,13 +6,13 @@ namespace Minesweeper
 {
     class MyPoint
     {
-        public int Y { get; set; }
         public int X { get; set; }
+        public int Y { get; set; }
 
-        public MyPoint(int Y, int X)
+        public MyPoint(int X, int Y)
         {
-            this.Y = Y;
             this.X = X;
+            this.Y = Y;
         }
     }
 }
