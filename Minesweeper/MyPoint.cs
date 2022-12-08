@@ -9,10 +9,10 @@ namespace Minesweeper
         public int X { get; set; }
         public int Y { get; set; }
 
-        public MyPoint(int X, int Y)
+        public MyPoint(int x, int y)
         {
-            this.X = X;
-            this.Y = Y;
+            this.X = x;
+            this.Y = y;
         }
     }
 }

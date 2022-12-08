@@ -8,7 +8,7 @@ namespace Minesweeper
 {
     class Cell
     {
-        public CellState cellState;
+        public CellState CellState;
 
         private static Image flagImage = Properties.Resources.flag;
         private static Image bombImage = Properties.Resources.bomb;
@@ -30,7 +30,7 @@ namespace Minesweeper
 
         public void DrawCell(Graphics graphics, int x, int y, int cellSize)
         {
-            switch (this.cellState)
+            switch (this.CellState)
             {
                 case CellState.ClosedCell:
                     graphics.FillRectangle(Brushes.Aqua, x * cellSize, y * cellSize, cellSize, cellSize);

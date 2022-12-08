@@ -15,7 +15,7 @@ namespace Minesweeper
         private TimeSpan elapsedTime = TimeSpan.Zero;
         private MinesweeperGame minesweeperGame = new MinesweeperGame(9, 30);
         private Point pointHighlightedCell = new Point(-100, -100);
-        private Rectangle HighlightedCell;
+        private Rectangle highlightedCell;
         private bool isPressedLeftMouseButton;
         private bool isPressedRightMouseButton;
 
@@ -31,13 +31,16 @@ namespace Minesweeper
 
         private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
         {
-            if (pointHighlightedCell.X != e.Location.X / minesweeperGame.CellSize ||
-                pointHighlightedCell.Y != e.Location.Y / minesweeperGame.CellSize)
-            {
-                pointHighlightedCell.X = e.Location.X / minesweeperGame.CellSize;
-                pointHighlightedCell.Y = e.Location.Y / minesweeperGame.CellSize;
+            int cellX = e.Location.X / minesweeperGame.CellSize;
+            int cellY = e.Location.Y / minesweeperGame.CellSize;
 
-                HighlightedCell = new Rectangle(
+            if (pointHighlightedCell.X != cellX ||
+                pointHighlightedCell.Y != cellY)
+            {
+                pointHighlightedCell.X = cellX;
+                pointHighlightedCell.Y = cellY;
+
+                highlightedCell = new Rectangle(
                 pointHighlightedCell.X * minesweeperGame.CellSize,
                 pointHighlightedCell.Y * minesweeperGame.CellSize,
                 minesweeperGame.CellSize,
@@ -117,9 +120,9 @@ namespace Minesweeper
 
             if (minesweeperGame.IsCoordinatesOutsideGameField(pointHighlightedCell.X, pointHighlightedCell.Y))
                 return;
-            if (minesweeperGame.Cells[pointHighlightedCell.X, pointHighlightedCell.Y].cellState == CellState.ClosedCell)
+            if (minesweeperGame.Cells[pointHighlightedCell.X, pointHighlightedCell.Y].CellState == CellState.ClosedCell)
             {
-                e.Graphics.FillRectangle(Brushes.DarkGreen, HighlightedCell);
+                e.Graphics.FillRectangle(Brushes.DarkGreen, highlightedCell);
             }
         }
 
