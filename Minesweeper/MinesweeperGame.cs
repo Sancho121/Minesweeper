@@ -126,8 +126,7 @@ namespace Minesweeper
             {
                 switch (this.Cells[point.X, point.Y].CellState)
                 {
-                    case CellState.OpenCell:
-                        continue;
+                    case CellState.OpenCell:                       
                     case CellState.FlagCell:
                         continue;
                     case CellState.ClosedCell when Cells[point.X, point.Y].BombsAroundCell == 0:
@@ -162,11 +161,11 @@ namespace Minesweeper
 
         private void ProcessDefeat()
         {
-            foreach (var position in GetAllCellPoints())
+            foreach (var point in GetAllCellPoints())
             {
-                if (Cells[position.X, position.Y].HasBomb == true)
+                if (Cells[point.X, point.Y].HasBomb == true)
                 {
-                    Cells[position.X, position.Y].CellState = CellState.OpenCell;
+                    Cells[point.X, point.Y].CellState = CellState.OpenCell;
                 }
             }
             this.Defeat(this, EventArgs.Empty);
@@ -174,11 +173,11 @@ namespace Minesweeper
 
         private void ProcessVictory()
         {
-            foreach (var position in GetAllCellPoints())
+            foreach (var point in GetAllCellPoints())
             {
-                if (Cells[position.X, position.Y].HasBomb == true)
+                if (Cells[point.X, point.Y].HasBomb == true)
                 {
-                    Cells[position.X, position.Y].CellState = CellState.FlagCell;
+                    Cells[point.X, point.Y].CellState = CellState.FlagCell;
                 }
             }
             this.Victory(this, EventArgs.Empty);
