@@ -38,18 +38,16 @@ namespace Minesweeper
                 case CellState.FlagCell:
                     graphics.DrawImage(flagImage, x * cellSize, y * cellSize);
                     break;
-                case CellState.OpenCell:
-                    if (this.HasBomb)
+                case CellState.OpenCell when this.HasBomb:
+                    graphics.DrawImage(bombImage, x * cellSize, y * cellSize);
+                    break;
+                case CellState.OpenCell when !this.HasBomb:
+                    if (this.BombsAroundCell > 0)
                     {
-                        graphics.DrawImage(bombImage, x * cellSize, y * cellSize);
-                    }
-                    else
-                    {
-                        if(this.BombsAroundCell > 0)
-                        {
-                            graphics.DrawString(BombsAroundCell.ToString(), font, brushByBombCount[BombsAroundCell], x * cellSize + 4, y * cellSize);
-                        }
-                    }
+                        graphics.DrawString(BombsAroundCell.ToString(), font, 
+                            brushByBombCount[BombsAroundCell], x * cellSize + 4, y * cellSize);
+                    }                  
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();                      

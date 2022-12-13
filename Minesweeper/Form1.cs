@@ -61,34 +61,32 @@ namespace Minesweeper
 
             timer1.Start();
 
-            if (e.Button == MouseButtons.Left)
+            switch (e.Button)
             {
-                minesweeperGame.OpenCell(cellX, cellY);
+                case MouseButtons.Left:
+                    minesweeperGame.OpenCell(cellX, cellY);
+
+                    if (isPressedRightMouseButton)
+                        minesweeperGame.SmartOpenCell(cellX, cellY);
+
+                    isPressedLeftMouseButton = false;
+                    break;
+                case MouseButtons.Right:
+                    minesweeperGame.PutFlagInCell(cellX, cellY);
+
+                    if (isPressedLeftMouseButton)
+                        minesweeperGame.SmartOpenCell(cellX, cellY);
+
+                    int remainingBombs = Math.Max(0, minesweeperGame.BombCount - minesweeperGame.FlagCount);
+                    bombCountLabel.Text = $"Мин: {remainingBombs}";
+
+                    isPressedRightMouseButton = false;
+                    break;
+                case MouseButtons.Middle:
+                    minesweeperGame.SmartOpenCell(cellX, cellY);
+                    break;
             }
-
-            if (e.Button == MouseButtons.Right)
-            {
-                minesweeperGame.PutFlagInCell(cellX, cellY);
-
-                if (minesweeperGame.FlagCount <= minesweeperGame.BombCount)
-                {
-                    bombCountLabel.Text = $"Мин: {minesweeperGame.BombCount - minesweeperGame.FlagCount}";
-                }
-                else
-                {
-                    bombCountLabel.Text = $"Мин: {0}";
-                }               
-            }
-
-            if (e.Button == MouseButtons.Middle ||
-               (isPressedRightMouseButton == true && e.Button == MouseButtons.Left) ||
-               (isPressedLeftMouseButton == true && e.Button == MouseButtons.Right))
-            {
-                minesweeperGame.SmartOpenCell(cellX, cellY);
-            }
-
-            isPressedRightMouseButton = false;
-            isPressedLeftMouseButton = false;
+            
             pictureBox1.Refresh();
         }
 
@@ -120,9 +118,12 @@ namespace Minesweeper
 
             if (minesweeperGame.IsCoordinatesOutsideGameField(pointHighlightedCell.X, pointHighlightedCell.Y))
                 return;
-            if (minesweeperGame.Cells[pointHighlightedCell.X, pointHighlightedCell.Y].CellState == CellState.ClosedCell)
+
+            Cell highlightedCell = minesweeperGame.Cells[pointHighlightedCell.X, pointHighlightedCell.Y];
+
+            if (highlightedCell.CellState == CellState.ClosedCell)
             {
-                e.Graphics.FillRectangle(Brushes.DarkGreen, highlightedCell);
+                e.Graphics.FillRectangle(Brushes.DarkGreen, this.highlightedCell);
             }
         }
 
